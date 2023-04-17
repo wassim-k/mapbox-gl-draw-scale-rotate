@@ -1,0 +1,56 @@
+{
+  "name": "mapbox-gl-draw-scale-rotate",
+  "version": "1.0.0",
+  "description": "A custom mode for MapboxGL Draw to scale and rotate features",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "watch": "yarn build --watch",
+    "prebuild": "rimraf dist",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wassim-k/mapbox-gl-draw-scale-rotate.git"
+  },
+  "keywords": [
+    "mapbox",
+    "mapbox-gl",
+    "mapbox-gl-draw",
+    "geojson"
+  ],
+  "author": "Wassim K",
+  "license": "MIT",
+  "homepage": "https://github.com/wassim-k/mapbox-gl-draw-scale-rotate",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@mapbox/mapbox-gl-draw": "^1.4.1",
+    "@types/mapbox__mapbox-gl-draw": "^1.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "esbuild": "^0.17.16",
+    "esbuild-plugin-copy": "^2.1.1",
+    "esbuild-plugin-d.ts": "^1.1.0",
+    "eslint": "^8.38.0",
+    "rimraf": "^5.0.0",
+    "typescript": "^5.0.4"
+  },
+  "peerDependencies": {
+    "@mapbox/mapbox-gl-draw": ">=1.4.0"
+  },
+  "dependencies": {
+    "@turf/bearing": "^6.5.0",
+    "@turf/center": "^6.5.0",
+    "@turf/destination": "^6.5.0",
+    "@turf/distance": "^6.5.0",
+    "@turf/helpers": "^6.5.0",
+    "@turf/midpoint": "^6.5.0",
+    "@turf/transform-rotate": "^6.5.0",
+    "@turf/transform-scale": "^6.5.0",
+    "@turf/turf": "^6.5.0"
+  }
+}
