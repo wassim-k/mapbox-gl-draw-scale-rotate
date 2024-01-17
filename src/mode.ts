@@ -13,6 +13,8 @@ import { ScaleRotateModeState } from './state';
 import { flatten } from './utils';
 import { LngLat, ScaleRotateCenter, ScaleRotateOp } from './types';
 
+export const scaleRotateModeName = 'scale_rotate';
+
 const { doubleClickZoom, CommonSelectors, moveFeatures, createSupplementaryPoints } = lib;
 
 export interface ScaleRotateMode extends DrawCustomMode<ScaleRotateModeState, ScaleRotateModeOptions> {
@@ -156,7 +158,9 @@ export const ScaleRotateMode: ScaleRotateMode = {
       if (a < 0.0) a += 360;
       if (a > 360) a -= 360;
 
-      (points[i1].properties ??= {}).heading = a;
+      const properties = points[i1].properties ??= {};
+      properties.heading = a;
+      properties.scale = true;
     }
   },
   createRotationPoints(this: ScaleRotateModeThis, state, geojson: GeoJSON.Feature, suppPoints: Array<GeoJSON.Feature<GeoJSON.Point>>) {

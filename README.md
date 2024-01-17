@@ -17,7 +17,7 @@ npm install mapbox-gl-draw-scale-rotate
 ```js
 import mapboxgl from 'mapbox-gl';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
-import { ScaleRotateMode, ScaleRotateCenter, ScaleRotateStyle } from 'mapbox-gl-draw-scale-rotate';
+import { scaleRotateModeName, ScaleRotateMode, ScaleRotateCenter, ScaleRotateStyle } from 'mapbox-gl-draw-scale-rotate';
 
 const map = new mapboxgl.Map({
   container: 'map', // container id
@@ -31,13 +31,13 @@ const draw = new MapboxDraw({
   displayControlsDefault: false,
   styles: ScaleRotateStyle,
   modes: Object.assign(MapboxDraw.modes, {
-    scaleRotateMode: ScaleRotateMode,
+    [scaleRotateModeName]: ScaleRotateMode,
   }),
 });
 map.addControl(draw);
 
 // when mode drawing should be activated
-draw.changeMode('scaleRotateMode', {
+draw.changeMode(scaleRotateModeName, {
   canScale: true,
   canRotate: true, // only rotation enabled
   canTrash: false, // disable feature delete
