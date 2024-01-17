@@ -1,7 +1,7 @@
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import { Map } from 'mapbox-gl';
-import { ScaleRotateCenter, ScaleRotateMode, ScaleRotateStyle } from 'mapbox-gl-draw-scale-rotate';
+import { ScaleRotateCenter, ScaleRotateMode, ScaleRotateStyle, scaleRotateModeName, ScaleRotateModeOptions } from 'mapbox-gl-draw-scale-rotate';
 import { useEffect, useRef } from 'react';
 import './App.css';
 import { ExtendDrawBar } from './extendDrawBar';
@@ -39,7 +39,7 @@ function App() {
     draw = new MapboxDraw({
       modes: {
         ...MapboxDraw.modes,
-        scaleRotateMode: ScaleRotateMode
+        [scaleRotateModeName]: ScaleRotateMode
       } as any,
       styles: ScaleRotateStyle,
       userProperties: true
@@ -104,7 +104,7 @@ function App() {
 
   const scaleRotate = () => {
     try {
-      draw.changeMode('scaleRotateMode', {
+      draw.changeMode(scaleRotateModeName, {
         canScale: true,
         canRotate: true, // only rotation enabled
         canTrash: false, // disable feature delete
@@ -116,7 +116,7 @@ function App() {
         rotationPointRadius: 1.2, // offset rotation point
 
         canSelectFeatures: true,
-      });
+      } as ScaleRotateModeOptions);
     } catch (err: any) {
       alert(err.message);
       console.error(err);
