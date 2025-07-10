@@ -1,21 +1,22 @@
-import { DrawCustomMode, DrawCustomModeThis, MapMouseEvent, MapTouchEvent, constants, lib } from '@mapbox/mapbox-gl-draw';
+import type { DrawCustomMode, DrawCustomModeThis, MapMouseEvent, MapTouchEvent } from '@mapbox/mapbox-gl-draw';
+import MapboxGLDraw from '@mapbox/mapbox-gl-draw';
 import bearing from '@turf/bearing';
 import center from '@turf/center';
 import destination from '@turf/destination';
 import distance from '@turf/distance';
-import { AllGeoJSON, Coord, Position, point } from '@turf/helpers';
+import { AllGeoJSON, Coord, point } from '@turf/helpers';
 import midpoint from '@turf/midpoint';
 import transformRotate from '@turf/transform-rotate';
 import transformScale from '@turf/transform-scale';
-import { Feature } from 'geojson';
+import { Feature, Position } from 'geojson';
 import { ScaleRotateModeOptions } from './options';
 import { ScaleRotateModeState } from './state';
-import { flatten } from './utils';
 import { LngLat, ScaleRotateCenter, ScaleRotateOp } from './types';
+import { flatten } from './utils';
 
 export const scaleRotateModeName = 'scale_rotate';
 
-const { doubleClickZoom, CommonSelectors, moveFeatures, createSupplementaryPoints } = lib;
+const { doubleClickZoom, CommonSelectors, moveFeatures, createSupplementaryPoints } = MapboxGLDraw.lib;
 
 export interface ScaleRotateMode extends DrawCustomMode<ScaleRotateModeState, ScaleRotateModeOptions> {
   pathsToCoordinates(featureId: string, paths: Array<string>): Array<{ coord_path: string; feature_id: string }>;
@@ -43,8 +44,8 @@ export interface ScaleRotateMode extends DrawCustomMode<ScaleRotateModeState, Sc
 
 type ScaleRotateModeThis = ScaleRotateMode & DrawCustomModeThis;
 
-const isRotatePoint = CommonSelectors.isOfMetaType(constants.meta.MIDPOINT);
-const isVertex = CommonSelectors.isOfMetaType(constants.meta.VERTEX);
+const isRotatePoint = CommonSelectors.isOfMetaType(MapboxGLDraw.constants.meta.MIDPOINT);
+const isVertex = CommonSelectors.isOfMetaType(MapboxGLDraw.constants.meta.VERTEX);
 
 export const ScaleRotateMode: ScaleRotateMode = {
   onSetup(this: ScaleRotateModeThis, options: ScaleRotateModeOptions) {
@@ -57,8 +58,8 @@ export const ScaleRotateMode: ScaleRotateMode = {
     }
 
     if (
-      feature.type === constants.geojsonTypes.POINT ||
-      feature.type === constants.geojsonTypes.MULTI_POINT
+      feature.type === MapboxGLDraw.constants.geojsonTypes.POINT
+      || feature.type === MapboxGLDraw.constants.geojsonTypes.MULTI_POINT
     ) {
       throw new TypeError('ScaleRotateMode can not handle points');
     }
@@ -77,7 +78,7 @@ export const ScaleRotateMode: ScaleRotateMode = {
       dragMoveLocation: options.startPos,
       dragMoving: false,
       canDragMove: false,
-      selectedCoordPaths: options.coordPath ? [options.coordPath] : []
+      selectedCoordPaths: options.coordPath ? [options.coordPath] : [],
     };
 
     if (!(state.canRotate || state.canScale)) {
@@ -85,7 +86,7 @@ export const ScaleRotateMode: ScaleRotateMode = {
     }
 
     this.setSelectedCoordinates(
-      this.pathsToCoordinates(featureId, state.selectedCoordPaths)
+      this.pathsToCoordinates(featureId, state.selectedCoordPaths),
     );
     this.setSelected(featureId);
     doubleClickZoom.disable(this);
@@ -100,11 +101,10 @@ export const ScaleRotateMode: ScaleRotateMode = {
   },
   toDisplayFeatures(this: ScaleRotateModeThis, state, geojson: Feature, display) {
     if (state.featureId === geojson.properties?.id) {
-      (geojson.properties ??= {}).active = constants.activeStates.ACTIVE;
+      (geojson.properties ??= {}).active = MapboxGLDraw.constants.activeStates.ACTIVE;
       display(geojson);
 
       const suppPoints = createSupplementaryPoints(geojson, {
-        map: this.map,
         midpoints: false,
         selectedPaths: state.selectedCoordPaths,
       });
@@ -118,8 +118,9 @@ export const ScaleRotateMode: ScaleRotateMode = {
         const rotPoints = this.createRotationPoints(state, geojson, suppPoints);
         rotPoints?.forEach(display);
       }
-    } else {
-      (geojson.properties ??= {}).active = constants.activeStates.INACTIVE;
+    }
+    else {
+      (geojson.properties ??= {}).active = MapboxGLDraw.constants.activeStates.INACTIVE;
       display(geojson);
     }
 
@@ -145,12 +146,12 @@ export const ScaleRotateMode: ScaleRotateMode = {
 
       const a1 = bearing(
         points[i0].geometry.coordinates,
-        points[i1].geometry.coordinates
+        points[i1].geometry.coordinates,
       );
 
       const a2 = bearing(
         points[i2].geometry.coordinates,
-        points[i1].geometry.coordinates
+        points[i1].geometry.coordinates,
       );
 
       let a = (a1 + a2) / 2.0;
@@ -169,8 +170,8 @@ export const ScaleRotateMode: ScaleRotateMode = {
 
     const rotationWidgets: Array<GeoJSON.Feature> = [];
     if (
-      type === constants.geojsonTypes.POINT ||
-      type === constants.geojsonTypes.MULTI_POINT
+      type === MapboxGLDraw.constants.geojsonTypes.POINT
+      || type === MapboxGLDraw.constants.geojsonTypes.MULTI_POINT
     ) {
       return;
     }
@@ -188,9 +189,10 @@ export const ScaleRotateMode: ScaleRotateMode = {
         corners[0],
         corners[1],
         rotCenter,
-        state.rotationPointRadius
+        state.rotationPointRadius,
       ));
-    } else {
+    }
+    else {
       corners.forEach((v2: Feature<GeoJSON.Point>) => {
         if (v1 != null) {
           rotationWidgets.push(this.createRotationPoint(
@@ -198,7 +200,7 @@ export const ScaleRotateMode: ScaleRotateMode = {
             v1,
             v2,
             rotCenter,
-            state.rotationPointRadius
+            state.rotationPointRadius,
           ));
         }
 
@@ -218,7 +220,7 @@ export const ScaleRotateMode: ScaleRotateMode = {
     return {
       type: 'Feature',
       properties: {
-        meta: constants.meta.MIDPOINT,
+        meta: MapboxGLDraw.constants.meta.MIDPOINT,
         icon: 'rotate',
         parent: featureId,
         lng: cR1[0],
@@ -298,7 +300,8 @@ export const ScaleRotateMode: ScaleRotateMode = {
     if (coordPaths.length >= 1) {
       const parts = coordPaths[0].split('.');
       return parseInt(parts[parts.length - 1]);
-    } else {
+    }
+    else {
       return 0;
     }
   },
@@ -310,17 +313,17 @@ export const ScaleRotateMode: ScaleRotateMode = {
     const center0 = this.computeRotationCenter(state, geojson);
     let corners: Array<Position>;
     switch (geojson.geometry.type) {
-      case constants.geojsonTypes.POLYGON:
-        corners = geojson.geometry.coordinates[0].slice(0);
+      case MapboxGLDraw.constants.geojsonTypes.POLYGON:
+        corners = (geojson.geometry as any).coordinates[0].slice(0);
         break;
-      case constants.geojsonTypes.MULTI_POLYGON:
-        corners = flatten(flatten(geojson.geometry.coordinates));
+      case MapboxGLDraw.constants.geojsonTypes.MULTI_POLYGON:
+        corners = flatten(flatten((geojson.geometry as any).coordinates));
         break;
-      case constants.geojsonTypes.LINE_STRING:
-        corners = geojson.geometry.coordinates;
+      case MapboxGLDraw.constants.geojsonTypes.LINE_STRING:
+        corners = (geojson.geometry as any).coordinates;
         break;
-      case constants.geojsonTypes.MULTI_LINE_STRING:
-        corners = flatten(geojson.geometry.coordinates);
+      case MapboxGLDraw.constants.geojsonTypes.MULTI_LINE_STRING:
+        corners = flatten((geojson.geometry as any).coordinates);
         break;
       default: corners = [];
     }
@@ -399,7 +402,8 @@ export const ScaleRotateMode: ScaleRotateMode = {
           this.dragScalePoint(state, e, delta);
           break;
       }
-    } else {
+    }
+    else {
       this.dragFeature(state, e, delta);
     }
 
@@ -478,8 +482,8 @@ export const ScaleRotateMode: ScaleRotateMode = {
     this.fireUpdate();
   },
   fireUpdate(this: ScaleRotateModeThis) {
-    this.map.fire(constants.events.UPDATE, {
-      action: constants.updateActions.CHANGE_COORDINATES,
+    this.map.fire(MapboxGLDraw.constants.events.UPDATE, {
+      action: MapboxGLDraw.constants.updateActions.CHANGE_COORDINATES,
       features: this.getSelected().map(feature => feature.toGeoJSON()),
     });
   },
@@ -502,17 +506,16 @@ export const ScaleRotateMode: ScaleRotateMode = {
     this.stopDragging(state);
   },
   clickNoTarget(this: ScaleRotateModeThis, state, _e: MapMouseEvent) {
-    if (state.canSelectFeatures) this.changeMode(constants.modes.SIMPLE_SELECT);
+    if (state.canSelectFeatures) this.changeMode(MapboxGLDraw.constants.modes.SIMPLE_SELECT);
   },
   clickInactive(this: ScaleRotateModeThis, state, e: MapMouseEvent) {
     if (state.canSelectFeatures && e.featureTarget.properties?.id) {
-      this.changeMode(constants.modes.SIMPLE_SELECT, {
+      this.changeMode(MapboxGLDraw.constants.modes.SIMPLE_SELECT, {
         featureIds: [e.featureTarget.properties.id],
       });
     }
   },
-  onTrash(this: ScaleRotateModeThis,) {
+  onTrash(this: ScaleRotateModeThis) {
     this.deleteFeature(this.getSelectedIds()[0]);
-  }
+  },
 };
-

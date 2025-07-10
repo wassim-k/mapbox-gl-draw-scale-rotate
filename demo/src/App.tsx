@@ -1,13 +1,13 @@
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import { Map } from 'mapbox-gl';
-import { ScaleRotateCenter, ScaleRotateMode, ScaleRotateStyle, scaleRotateModeName, ScaleRotateModeOptions } from 'mapbox-gl-draw-scale-rotate';
+import { ScaleRotateCenter, ScaleRotateMode, ScaleRotateStyle, scaleRotateModeName, type ScaleRotateModeOptions } from 'mapbox-gl-draw-scale-rotate';
 import { useEffect, useRef } from 'react';
 import './App.css';
 import { ExtendDrawBar } from './extendDrawBar';
 
-const rotateImg = require('mapbox-gl-draw-scale-rotate/dist/img/rotate.png');
-const scaleImg = require('mapbox-gl-draw-scale-rotate/dist/img/scale.png');
+import rotateImg from 'mapbox-gl-draw-scale-rotate/dist/img/rotate.png';
+import scaleImg from 'mapbox-gl-draw-scale-rotate/dist/img/scale.png';
 
 let map: Map;
 let draw: MapboxDraw;
@@ -23,7 +23,7 @@ function App() {
       center: [51.3857, 35.6102],
       zoom: 10,
       pitch: 0,
-      accessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN
+      accessToken: import.meta.env.VITE_MAPBOX_ACCESS_TOKEN,
     });
 
     map.loadImage(rotateImg, (error, image) => {
@@ -39,10 +39,10 @@ function App() {
     draw = new MapboxDraw({
       modes: {
         ...MapboxDraw.modes,
-        [scaleRotateModeName]: ScaleRotateMode
-      } as any,
+        [scaleRotateModeName]: ScaleRotateMode,
+      },
       styles: ScaleRotateStyle,
-      userProperties: true
+      userProperties: true,
     });
 
     drawBar = new ExtendDrawBar({
@@ -117,9 +117,9 @@ function App() {
 
         canSelectFeatures: true,
       } as ScaleRotateModeOptions);
-    } catch (err: any) {
-      alert(err.message);
-      console.error(err);
+    }
+    catch (err: unknown) {
+      console.warn(err);
     }
   };
 

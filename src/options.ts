@@ -1,4 +1,4 @@
-import { ScaleRotateCenter, LngLat } from './types';
+import { LngLat, ScaleRotateCenter } from './types';
 
 export interface ScaleRotateModeOptions {
   featureId?: string;

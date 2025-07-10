@@ -1,7 +1,6 @@
 import { DrawFeature } from '@mapbox/mapbox-gl-draw';
-import { Position } from '@turf/helpers';
-import { Feature, GeoJsonProperties, Geometry } from 'geojson';
-import { ScaleRotateCenter, LngLat, ScaleRotateOp } from './types';
+import { Feature, GeoJsonProperties, Geometry, Position } from 'geojson';
+import { LngLat, ScaleRotateCenter, ScaleRotateOp } from './types';
 
 export interface ScaleRotateModeState {
   canRotate: boolean;

@@ -1,25 +1,30 @@
 {
-    "compilerOptions": {
-        "module": "esnext",
-        "target": "es6",
-        "declaration": true,
-        "moduleResolution": "node",
-        "outDir": "./dist",
-        "strict": true,
-        "esModuleInterop": true,
-        "sourceMap": true,
-        "allowJs": true,
-        "rootDir": "./src",
-        "lib": [
-            "dom",
-            "es2015"
-        ],
-        "typeRoots": [
-            "./node_modules/@types",
-            "./types"
-        ]
-    },
-    "files": [
-        "src/index.ts", "src/options.ts", "src/state.ts", "src/style.ts", "src/utils.ts"
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es6",
+    "declaration": true,
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "rootDir": "./src",
+    "lib": [
+      "dom",
+      "es2015"
+    ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./types"
     ]
+  },
+  "files": [
+    "src/index.ts",
+    "src/options.ts",
+    "src/state.ts",
+    "src/style.ts",
+    "src/utils.ts"
+  ]
 }

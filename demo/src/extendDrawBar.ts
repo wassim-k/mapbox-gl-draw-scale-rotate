@@ -3,20 +3,20 @@ import { Map } from 'mapbox-gl';
 
 export interface ExtendDrawBarOptions {
   draw: MapboxDraw;
-  buttons?: ButtonOptions[];
+  buttons?: Array<ButtonOptions>;
   onAdd?: (map: Map) => HTMLElement;
   onRemove?: (map: Map) => void;
 }
 
 export interface ButtonOptions {
-  classes?: string[];
+  classes?: Array<string>;
   on: string;
   action: EventListener;
   elButton?: HTMLButtonElement;
 }
 
 export class ExtendDrawBar {
-  private buttons: ButtonOptions[];
+  private buttons: Array<ButtonOptions>;
   private onAddOrig: (map: Map) => HTMLElement;
   private onRemoveOrig: (map: Map) => void;
   private elContainer!: HTMLElement;
@@ -43,7 +43,7 @@ export class ExtendDrawBar {
   }
 
   private addButton(opt: ButtonOptions): void {
-    var elButton = document.createElement('button');
+    const elButton = document.createElement('button');
     elButton.className = 'mapbox-gl-draw_ctrl-draw-btn';
     if (opt.classes instanceof Array) {
       opt.classes.forEach((c) => {
